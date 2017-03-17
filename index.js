@@ -4,8 +4,11 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const path = require('path');
 const url = 'mongodb://localhost:27017/urlshort'
+const URI = process.env.MONGOLAB_URI || process.env.MONGODB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
+
+console.log(URI);
 
 //Middleware
 app.set('view engine', 'ejs');
@@ -14,7 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 //Connect to database and start server
-mongodb.MongoClient.connect(url, (err, database) => {
+mongodb.MongoClient.connect(URI, (err, database) => {
     if(err) console.log(err);
     db = database;
     app.listen(port, () => {
