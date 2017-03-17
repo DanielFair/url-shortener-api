@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const url = 'mongodb://localhost:27017/urlshort'
 const app = express();
+const port = process.env.PORT || 3000;
 
 //Middleware
 app.set('view engine', 'ejs');
@@ -16,8 +17,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 mongodb.MongoClient.connect(url, (err, database) => {
     if(err) console.log(err);
     db = database;
-    app.listen(3000, () => {
-        console.log('Server listening on port 3000!')
+    app.listen(port, () => {
+        console.log('Server listening on port '+port+'!');
     });
 })
 app.get('/', (req, res) => {
