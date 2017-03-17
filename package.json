@@ -1,0 +1,16 @@
+{
+  "name": "urlshort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Daniel Fair",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "nodemon": "^1.11.0"
+  }
+}
