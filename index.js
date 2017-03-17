@@ -8,7 +8,6 @@ const URI = process.env.MONGODB_URI;
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log(URI);
 
 //Middleware
 app.set('view engine', 'ejs');
