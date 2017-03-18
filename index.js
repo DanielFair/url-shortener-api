@@ -4,7 +4,8 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const path = require('path');
 // const url = 'mongodb://localhost:27017/urlshort'
-const URI = 'mongodb://public:publicuser@ds127928.mlab.com:27928/url-shortener';
+// const URI = 'mongodb://public:publicuser@ds127928.mlab.com:27928/url-shortener';
+const URI = process.env.MONGOLAB_YELLOW_URI;
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -21,6 +22,9 @@ mongodb.MongoClient.connect(URI, (err, database) => {
     db = database;
     app.listen(port, () => {
         console.log('Server listening on port '+port+'!');
+        // console.log(process.env.MONGODB_URI);
+        // console.log(process.env.MONGOLAB_YELLOW_URI);
+        // console.log('test');
     });
 })
 app.get('/', (req, res) => {
@@ -30,7 +34,7 @@ app.get('/', (req, res) => {
 app.get('/new/:URL*', (req, res) => {
     let urlParam = req.params.URL + req.params[0];
     let checkObj = {'original_url': urlParam};
-    var regex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?");
+    var regex = new RegExp('^(https?:\/\/)?[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-‌​]+$');
     if(regex.test(urlParam)){
         //Valid URL format
         db.collection('shortURLs').find(checkObj).toArray().then((result) => {
@@ -49,7 +53,6 @@ app.get('/new/:URL*', (req, res) => {
                 
                 // let short_url = 'localhost:3000/'+shortId;
                 let newObj = {'original_url': urlParam, 'short_url': shortId};
-                console.log('newObj: ', newObj);
                 db.collection('shortURLs').insert(newObj, (err, result) => {
                     if(err) throw err;
                     //Inserted successfully, now render results template HTML
