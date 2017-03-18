@@ -45,8 +45,6 @@ app.get('/new/:URL*', (req, res) => {
                 //No match in the database, create new entry for URL
                 console.log('No matches in DB, generating new ID!');
                 let shortId = generateUniqueId();
-                
-                // let short_url = 'localhost:3000/'+shortId;
                 let newObj = {'original_url': urlParam, 'short_url': shortId};
                 db.collection('shortURLs').insert(newObj, (err, result) => {
                     if(err) throw err;
@@ -79,8 +77,6 @@ app.get('/:shortUrl', (req, res) => {
             //Match found in database, redirect to full URL
             console.log('Short URL match found in DB!');
             let redirectUrl = result[0].original_url;
-            console.log(redirectUrl);
-            console.log(typeof(redirectUrl));
             res.redirect(301, redirectUrl);
         }
         else{
