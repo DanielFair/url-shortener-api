@@ -46,15 +46,16 @@ app.get('/new/:URL*', (req, res) => {
                 //No match in the database, create new entry for URL
                 console.log('No matches in DB, generating new ID!');
                 let shortId = generateUniqueId();
-                let short_url = 'localhost:3000/'+shortId;
-                let newObj = {'original_url': urlParam, 'short_url': short_url};
+                
+                // let short_url = 'localhost:3000/'+shortId;
+                let newObj = {'original_url': urlParam, 'short_url': shortId};
                 console.log('newObj: ', newObj);
                 db.collection('shortURLs').insert(newObj, (err, result) => {
                     if(err) throw err;
                     //Inserted successfully, now render results template HTML
                     res.render('results', {
                         origUrl: urlParam,
-                        shortUrl: short_url
+                        shortUrl: shortId
                     });
                 });       
             }
@@ -71,7 +72,9 @@ app.get('/new/:URL*', (req, res) => {
 });
 
 app.get('/:shortUrl', (req, res) => {
-    let shortUrl = 'localhost:3000/'+req.params.shortUrl;
+    let shortUrl = Number(req.params.shortUrl);
+    console.log('Checking for matches for shortUrl param: ' +shortUrl)
+    console.log('typeof shortUrl param: '+typeof(shortUrl));
     db.collection('shortURLs').find({'short_url': shortUrl}).toArray()
     .then((result) => {
         if(result.length > 0) {
@@ -79,10 +82,8 @@ app.get('/:shortUrl', (req, res) => {
             console.log('Short URL match found in DB!');
             let redirectUrl = result[0].original_url;
             console.log(redirectUrl);
-            res.writeHead(301,
-            {Location: redirectUrl}
-            );
-            res.end();
+            console.log(typeof(redirectUrl));
+            res.redirect(301, redirectUrl);
         }
         else{
             //No match in DB
